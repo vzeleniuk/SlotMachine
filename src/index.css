@@ -5,9 +5,177 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #292929;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg)
+  }
+}
+
+@keyframes pulse {
+  0% {
+    background-color: rgba(255, 0, 0, .2);
+  }
+  100% {
+    background-color: rgba(243, 170, 11, 0.2);
+  }
+}
+
+@keyframes pulse-border {
+  0% {
+    border-color: rgba(255, 0, 0, .2);
+  }
+  100% {
+    border-color: rgba(243, 170, 11, 0.2);
+  }
+}
+
+#spinButton {
+  appearance: none;  
+  border: none;
+  background: url(https://andyhoffman.codes/random-assets/img/slots/repeat.png) transparent 0 0 no-repeat;
+  background-size: cover;
+  width: 48px;
+  height: 48px;
+  position: absolute;
+  top: 360px;
+  left: 55%; 
+  cursor: pointer;
+  animation: 6s linear infinite spin;
+}
+
+#spinButton:disabled {
+  cursor: wait;
+}
+
+h1 {  
+  font-size: 150%;
+  padding: 0.25em .5em;  
+  font-family: 'Segoe UI', sans-serif;
+}
+
+h1 span {
+  color: aliceblue;
+  border: 1px solid hsla(208, 100%, 97.1%, .2);
+  padding: 0.1em .2em;  
+}
+
+.icons { 
+  display: inline-block;
+  width: 141px;
+  height: 363px;
+  overflow: hidden;
+  background: #fff url(/reel.png) repeat-y;
+  will-change: backgroundPosition;
+  transition: 0.3s background-position ease-in-out;
+  padding: 0 65px;
+  transform: translateZ(0);
+}
+
+.icons:nth-child(2) {
+  margin: 0 10px;
+}
+
+* { box-sizing: border-box; }
+
+.spinner-container {
+  overflow: hidden;
+  height: 430px;  
+  padding: 2em;
+  transform: translate(-50%, -50%) scale(.62, .62);
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  display: flex;
+  transition: 0.3s transform;
+}
+
+.app-wrap.winner-false {
+  animation: linear 1s spin;
+}
+
+.gradient-fade {
+  position: absolute;
+  top: 31px;
+  right: 30px;
+  bottom: 32px;
+  left: 32px;
+  background: linear-gradient(
+    to bottom, 
+    rgba(64,64,64,1) 0%, 
+    rgba(64,64,64,0) 7%, 
+    rgba(64,64,64,0) 93%, 
+    rgba(64,64,64,1) 100%
+  );
+}
+
+.spinner-container.winner .gradient-fade {
+  border: 10px solid tomato;
+  animation: 
+    pulse-border
+    1.5s
+    ease-out
+    0s
+    alternate
+    infinite
+    none
+    running;
+}
+
+.balance-container {
+  position: absolute;
+  top: 330px;
+  left: 36%;
+}
+
+.balance-container label {
+  color: white;
+  display: block;
+}
+
+.balance-container input {
+  display: block;
+}
+
+.balance-container input:disabled {
+  cursor: not-allowed;
+}
+
+table {
+  background-color: white;
+  position: absolute;
+  top: 450px;
+  left: 36%;
+  border-collapse: collapse;
+}
+
+table .winning-row {
+  animation: 
+    pulse 
+    1.5s
+    ease-out
+    0s
+    alternate
+    infinite
+    none
+    running;
+}
+
+@media screen and (max-width: 1000px) {
+  .spinner-container {
+    transform: translate(-50%, -50%) scale(.55, .55);
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .spinner-container {
+    transform: translate(-50%, -50%) scale(.4, .4);
+  }
 }
