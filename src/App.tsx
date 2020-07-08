@@ -1,9 +1,9 @@
 import * as React from 'react'
 import './App.css'
-import { Reel, Balance, SpinButton, PayTable } from './components'
+import { Reel, Balance, SpinButton, PayTable, DebugArea } from './components'
 import * as Helpers from './helpers/Helpers'
-import { MatchesPositions, Positions } from './types'
-import { LINES, COMBINATION_KEYS } from './constants'
+import { MatchesPositions, Positions, CustomReels } from './types'
+import { LINES, COMBINATION_KEYS, MODE, REEL } from './constants'
 
 interface Props {}
 interface State {
@@ -11,6 +11,8 @@ interface State {
   balance: number
   isSpinning: boolean
   isInitialSpin: boolean
+  mode: MODE
+  customReels: CustomReels | any
 }
 
 class App extends React.Component<Props, State> {
@@ -19,19 +21,6 @@ class App extends React.Component<Props, State> {
     [LINES.MIDDLE]: [],
     [LINES.BOTTOM]: []
   }
-
-  static loser = [
-    'Not quite', 
-    'Stop gambling', 
-    'Hey, you lost!', 
-    'Ouch! I felt that',      
-    'Don\'t beat yourself up',
-    'There goes the college fund',
-    'I have a cat. You have a loss',
-    'You\'re awesome at losing',
-    'Coding is hard',
-    'Don\'t hate the coder'
-  ]
   _child1: any
   _child2: any
   _child3: any
@@ -43,14 +32,17 @@ class App extends React.Component<Props, State> {
       winningCombination: null,
       balance: 5000,
       isSpinning: false,
-      isInitialSpin: true
+      isInitialSpin: true,
+      mode: MODE.RANDOM,
+      customReels: {}
     }
     this.finishHandler = this.finishHandler.bind(this)
+    this.modeChoiceHandler = this.modeChoiceHandler.bind(this)
+    this.combinationChoiceHandler = this.combinationChoiceHandler.bind(this)
     this.handleSpinButtonClick = this.handleSpinButtonClick.bind(this)
     this.handleBalanceChange = this.handleBalanceChange.bind(this)
     this.emptyMatches = this.emptyMatches.bind(this)
-    this.getLoser = this.getLoser.bind(this)  
-  }  
+  }
 
   componentDidMount() {
     this.setState({ 
@@ -58,9 +50,20 @@ class App extends React.Component<Props, State> {
     })
   }
 
+  componentWillUnmount() {
+    this.setState({
+      winningCombination: null,
+      balance: 5000,
+      isSpinning: false,
+      isInitialSpin: true,
+      mode: MODE.RANDOM,
+      customReels: {}
+    })
+  }
+
   handleSpinButtonClick() { 
     this.setState({ 
-      isInitialSpin: this.state.isInitialSpin ? !this.state.isInitialSpin : this.state.isInitialSpin,
+      isInitialSpin: false,
       winningCombination: null, 
       isSpinning: true,
       balance: Helpers.handleChangeTotalBalanceOnClick(this.state.balance)
@@ -75,10 +78,18 @@ class App extends React.Component<Props, State> {
     this.setState({balance: Helpers.handleChangeTotalBalanceOnChange(Number(event.target.value))})
   }
 
+  modeChoiceHandler(mode: MODE) {
+    this.setState({ mode })
+  }
+
+  combinationChoiceHandler(customReels: CustomReels) {
+    this.setState({ customReels })
+  }
+
   finishHandler(positions: Positions) {
-    App.matches[LINES.TOP].push(positions.top)
-    App.matches[LINES.MIDDLE].push(positions.middle)
-    App.matches[LINES.BOTTOM].push(positions.bottom)
+    App.matches[LINES.TOP].push(positions[LINES.TOP])
+    App.matches[LINES.MIDDLE].push(positions[LINES.MIDDLE])
+    App.matches[LINES.BOTTOM].push(positions[LINES.BOTTOM])
 
     if (Helpers.areAllLinesComplete(App.matches)) {
       const { winningCombination } = this.state
@@ -99,29 +110,41 @@ class App extends React.Component<Props, State> {
     }
   }
 
-  getLoser = () => {       
-    return App.loser[Math.floor(Math.random()*App.loser.length)]
-  }
-
   render() {
-    console.log(App.matches)
+    console.log('matches: ', App.matches)
     const { winningCombination } = this.state
     console.log('winningCombination: ', winningCombination);
     return (
       <div className="App">
         <h1>
-          <span>{winningCombination === null ? 'Waiting…' : winningCombination.length ? '🤑 Pure skill! 🤑' : this.getLoser()}</span>
+          Slot Machine
         </h1>
 
         <div className={`spinner-container ${winningCombination && winningCombination.length ? 'winner' : ''}`}>
-          <Reel onFinish={this.finishHandler} ref={(child) => { this._child1 = child }} timer={2000} />
-          <Reel onFinish={this.finishHandler} ref={(child) => { this._child2 = child }} timer={2500} />
-          <Reel onFinish={this.finishHandler} ref={(child) => { this._child3 = child }} timer={3000} />
+          <Reel 
+            onFinish={this.finishHandler} 
+            ref={(child) => { this._child1 = child }} 
+            timer={2000} 
+            customPosition={Helpers.defineReelPosition(this.state.customReels, REEL.FIRST)}
+          />
+          <Reel 
+            onFinish={this.finishHandler} 
+            ref={(child) => { this._child2 = child }} 
+            timer={2500} 
+            customPosition={Helpers.defineReelPosition(this.state.customReels, REEL.SECOND)}
+          />
+          <Reel 
+            onFinish={this.finishHandler} 
+            ref={(child) => { this._child3 = child }} 
+            timer={3000} 
+            customPosition={Helpers.defineReelPosition(this.state.customReels, REEL.THIRD)}
+          />
           <div className="gradient-fade" />
         </div>
         <SpinButton onClick={this.handleSpinButtonClick} disabled={this.state.isSpinning || this.state.balance === 0} />
         <Balance disabled={this.state.isSpinning} balance={this.state.balance} onChange={this.handleBalanceChange} />
         <PayTable winningCombination={winningCombination || []} />
+        <DebugArea onModeChoice={this.modeChoiceHandler} onCombinationChoice={this.combinationChoiceHandler} />
       </div>
     )
   }

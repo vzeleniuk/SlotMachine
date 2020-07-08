@@ -3,14 +3,20 @@ import {
   SYMBOLS,
   COMBINATION_KEYS,
   LINES,
+  MODE,
   Bars,
   SymbolsOrderByPositionNumeric, 
   BetValue, 
   LowestBalanceValue, 
   HighestBalanceValue,
   PayTableData,
+  REEL,
 } from '../constants'
-import { MatchesPositions, WinningCombinationByLine } from '../types'
+import { MatchesPositions, WinningCombinationByLine, CustomReels } from '../types'
+
+export const isFixedMode = (mode: MODE | string): boolean => {
+  return mode === MODE.FIXED
+}
 
 export const fillCombination = (icon: SYMBOLS) => {
   const result: number[] = [0, 0, 0]
@@ -114,4 +120,14 @@ export const defineReward = (winningCombinationKey: COMBINATION_KEYS): number =>
 export const updateBalance = (balance: number, winningCombinationKeys: COMBINATION_KEYS[]): number => {
   const reward = winningCombinationKeys.map(key => defineReward(key))
   return !!reward.length ? balance + _.sum(reward) : balance
+}
+
+// Custom reels
+export const defineReelPosition = (customReels: CustomReels, reel: REEL) => {
+  if (!customReels) {return null}
+  const currentReelValue = customReels[reel]
+  if (!currentReelValue) {return null}
+  if (!currentReelValue[0] && !currentReelValue[1]) { return null }
+
+  return {[currentReelValue[1]]: currentReelValue[0]}
 }

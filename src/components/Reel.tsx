@@ -1,20 +1,23 @@
 import * as React from 'react'
-import { iconHeight, totalSymbols } from '../constants'
+import { iconHeight, totalSymbols, LINES } from '../constants'
+import { CustomReels } from '../types'
 import * as Helpers from '../helpers/Helpers'
 
 interface Props {
   onFinish: Function
   timer: number
+  customPosition: any | null
 }
 
 interface State {
   position: number
+  customPosition: any | null
   lastPosition: number | null
   timeRemaining: number
 }
 
 class Reel extends React.Component<Props, State> {  
-  static multiplier: number = Math.floor(Math.random()*(4-1)+1)
+  static multiplier: number = Math.floor(Math.random() * (4 - 1) + 1)
   static speed = iconHeight * Reel.multiplier 
   start = this.setStartPosition()
   timer = setInterval(() => {
@@ -25,6 +28,7 @@ class Reel extends React.Component<Props, State> {
     super(props)
     this.state = {
       position: 0,
+      customPosition: null,
       lastPosition: null,
       timeRemaining: 0
     }
@@ -43,7 +47,8 @@ class Reel extends React.Component<Props, State> {
 
     this.setState({
       position: this.start,
-      timeRemaining: this.props.timer
+      timeRemaining: this.props.timer,
+      customPosition: this.props.customPosition
     })
 
     this.timer = setInterval(() => {
@@ -51,7 +56,24 @@ class Reel extends React.Component<Props, State> {
     }, 100)
   }
 
-  forceUpdateHandler(){
+  componentDidUpdate(prevProps: Props) {
+    if (prevProps.customPosition !== this.props.customPosition) {
+      this.setState({
+        customPosition: this.props.customPosition
+      })
+    }
+  }
+
+  componentWillUnmount() {
+    this.setState({
+      position: 0,
+      customPosition: null,
+      lastPosition: null,
+      timeRemaining: 0
+    })
+  }
+
+  forceUpdateHandler() {
     this.reset()
   } 
 
@@ -73,7 +95,7 @@ class Reel extends React.Component<Props, State> {
   }
   
   setStartPosition() {
-    return ((Math.floor((Math.random()*totalSymbols))) * iconHeight)*-1
+    return ((Math.floor((Math.random() * totalSymbols))) * iconHeight) * -1
   }
 
   moveBackground() {
@@ -86,8 +108,8 @@ class Reel extends React.Component<Props, State> {
   getSymbolFromPosition() {
     let { position } = this.state
     
-    const maxPosition = (iconHeight * (totalSymbols-1)*-1)
-    let moved = (this.props.timer/100) * Reel.multiplier
+    const maxPosition = (iconHeight * (totalSymbols - 1) * -1)
+    let moved = (this.props.timer / 100) * Reel.multiplier
     let startPosition = this.start
     let currentPosition = startPosition    
 
@@ -98,11 +120,12 @@ class Reel extends React.Component<Props, State> {
         currentPosition = 0
       }      
     }
-    const result = {
-      top: Helpers.getTopSymbol(currentPosition),
-      middle: currentPosition, 
-      bottom: Helpers.getBottomSymbol(currentPosition)
+    let result = {
+      [LINES.TOP]: Helpers.getTopSymbol(currentPosition),
+      [LINES.MIDDLE]: currentPosition, 
+      [LINES.BOTTOM]: Helpers.getBottomSymbol(currentPosition)
     }
+
     this.props.onFinish(result)
   }
 
