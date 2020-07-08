@@ -22,8 +22,43 @@ export enum LINES {
   ANY = 'Any'
 }
 
+export const LinesNames = [
+  LINES.TOP, LINES.MIDDLE, LINES.BOTTOM
+]
+
+export enum REEL {
+  FIRST = 'firstReel',
+  SECOND = 'secondReel',
+  THIRD = 'thirdReel'
+}
+
+export enum MODE {
+  RANDOM = 'Random',
+  FIXED = 'Fixed'
+}
+
 export const SymbolsOrder = [
   SYMBOLS.THREE_BAR, SYMBOLS.ONE_BAR, SYMBOLS.TWO_BAR, SYMBOLS.SEVEN, SYMBOLS.CHERRY
+]
+
+export const SymbolsNamesOrder = {
+  [SYMBOLS.THREE_BAR]: '3xBAR',
+  [SYMBOLS.ONE_BAR]: 'BAR',
+  [SYMBOLS.TWO_BAR]: '2xBAR',
+  [SYMBOLS.SEVEN]: '7',
+  [SYMBOLS.CHERRY]: 'Cherry'
+}
+
+export const SymbolsNamesOrderMap: string[] = [
+  SymbolsNamesOrder[SYMBOLS.THREE_BAR], 
+  SymbolsNamesOrder[SYMBOLS.ONE_BAR], 
+  SymbolsNamesOrder[SYMBOLS.TWO_BAR], 
+  SymbolsNamesOrder[SYMBOLS.SEVEN], 
+  SymbolsNamesOrder[SYMBOLS.CHERRY]
+]
+
+export const ReelsOrder = [
+  REEL.FIRST, REEL.SECOND, REEL.THIRD
 ]
 
 export const SymbolsOrderByPosition = [
