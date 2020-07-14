@@ -1,6 +1,6 @@
 {
-  "short_name": "SlotMachine",
-  "name": "Slot Machine",
+  "short_name": "React App",
+  "name": "Create React App Sample",
   "icons": [
     {
       "src": "favicon.ico",
@@ -8,14 +8,18 @@
       "type": "image/x-icon"
     },
     {
-      "src": "android192.png",
+      "src": "logo192.png",
       "type": "image/png",
       "sizes": "192x192"
+    },
+    {
+      "src": "logo512.png",
+      "type": "image/png",
+      "sizes": "512x512"
     }
   ],
   "start_url": ".",
-  "display": "fullscreen",
+  "display": "standalone",
   "theme_color": "#000000",
-  "background_color": "#292929",
-  "description": "A simply Slot Machine."
+  "background_color": "#ffffff"
 }
