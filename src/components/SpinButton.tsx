@@ -6,12 +6,14 @@ interface Props {
 }
 
 export const SpinButton = (props: Props) => {
+  const renderInner = props.disabled ? <span className="spinner-border text-light" /> : 'SPIN'
   return (
     <button 
+      className="spin-button btn btn-success"
       aria-label='SPIN!' 
-      id='spinButton' 
       disabled={props.disabled}
       onClick={props.onClick}>
+      {renderInner}
     </button>
   )
 }

@@ -1,5 +1,4 @@
 import * as React from 'react'
-import './App.css'
 import { Reel, Balance, SpinButton, PayTable, DebugArea } from './components'
 import * as Helpers from './helpers/Helpers'
 import { MatchesPositions, Positions, CustomReels } from './types'
@@ -48,6 +47,7 @@ class App extends React.Component<Props, State> {
     this.setState({ 
       isSpinning: true
     })
+    Helpers.A2HS()
   }
 
   componentWillUnmount() {
@@ -93,7 +93,7 @@ class App extends React.Component<Props, State> {
 
     if (Helpers.areAllLinesComplete(App.matches)) {
       const { winningCombination } = this.state
-      const combinationKeys: COMBINATION_KEYS[] = this.state.isInitialSpin ? [] : Helpers.verifyResult(App.matches)
+      const combinationKeys: COMBINATION_KEYS[] = this.state.isInitialSpin ? [] : Helpers.verifyResult(App.matches).winningCombinations
       this.setState({ 
         winningCombination: combinationKeys, 
         isSpinning: false, 
@@ -111,40 +111,52 @@ class App extends React.Component<Props, State> {
   }
 
   render() {
-    console.log('matches: ', App.matches)
     const { winningCombination } = this.state
-    console.log('winningCombination: ', winningCombination);
+    const winningLines = this.state.isInitialSpin ? [] : Helpers.verifyResult(App.matches).winningLines
     return (
-      <div className="App">
-        <h1>
-          Slot Machine
-        </h1>
-
-        <div className={`spinner-container ${winningCombination && winningCombination.length ? 'winner' : ''}`}>
-          <Reel 
-            onFinish={this.finishHandler} 
-            ref={(child) => { this._child1 = child }} 
-            timer={2000} 
-            customPosition={Helpers.defineReelPosition(this.state.customReels, REEL.FIRST)}
-          />
-          <Reel 
-            onFinish={this.finishHandler} 
-            ref={(child) => { this._child2 = child }} 
-            timer={2500} 
-            customPosition={Helpers.defineReelPosition(this.state.customReels, REEL.SECOND)}
-          />
-          <Reel 
-            onFinish={this.finishHandler} 
-            ref={(child) => { this._child3 = child }} 
-            timer={3000} 
-            customPosition={Helpers.defineReelPosition(this.state.customReels, REEL.THIRD)}
-          />
-          <div className="gradient-fade" />
+      <div className="app-container container">
+        <div className="row justify-content-center">
+          <div className="main-content col-4">
+            <div className="d-flex flex-column mt-2">
+              <h1 className="">
+                Slot Machine
+              </h1>
+            </div>
+            <div className="spinner-container">
+              <Reel 
+                onFinish={this.finishHandler} 
+                ref={(child) => { this._child1 = child }} 
+                timer={2000} 
+                customPosition={Helpers.defineReelPosition(this.state.customReels, REEL.FIRST)}
+              />
+              <Reel 
+                onFinish={this.finishHandler} 
+                ref={(child) => { this._child2 = child }} 
+                timer={2500} 
+                customPosition={Helpers.defineReelPosition(this.state.customReels, REEL.SECOND)}
+              />
+              <Reel 
+                onFinish={this.finishHandler} 
+                ref={(child) => { this._child3 = child }} 
+                timer={3000} 
+                customPosition={Helpers.defineReelPosition(this.state.customReels, REEL.THIRD)}
+              />
+              <div className="gradient-fade" />
+              {winningLines.includes(LINES.TOP) && !this.state.isSpinning && <div className="winner winner-top" />}
+              {winningLines.includes(LINES.MIDDLE) && !this.state.isSpinning && <div className="winner winner-middle" />}
+              {winningLines.includes(LINES.BOTTOM) && !this.state.isSpinning && <div className="winner winner-bottom" />}
+            </div>
+            <div className="balance-section d-flex flex-row justify-content-between px-3">
+              <Balance disabled={this.state.isSpinning} balance={this.state.balance} onChange={this.handleBalanceChange} />
+              <SpinButton onClick={this.handleSpinButtonClick} disabled={this.state.isSpinning || this.state.balance === 0} />
+            </div>
+            <PayTable winningCombination={winningCombination || []} />
+            <div className="d-flex flex-column justify-content-center">
+              <DebugArea onModeChoice={this.modeChoiceHandler} onCombinationChoice={this.combinationChoiceHandler} />
+            </div>
+            <button id="add-button" className="add-button btn btn-primary">Add to home screen</button>
+          </div>
         </div>
-        <SpinButton onClick={this.handleSpinButtonClick} disabled={this.state.isSpinning || this.state.balance === 0} />
-        <Balance disabled={this.state.isSpinning} balance={this.state.balance} onChange={this.handleBalanceChange} />
-        <PayTable winningCombination={winningCombination || []} />
-        <DebugArea onModeChoice={this.modeChoiceHandler} onCombinationChoice={this.combinationChoiceHandler} />
       </div>
     )
   }

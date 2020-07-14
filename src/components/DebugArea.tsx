@@ -20,8 +20,9 @@ interface State {
   [REEL.FIRST]: [number | string, string ]
   [REEL.SECOND]: [number | string, string ]
   [REEL.THIRD]: [number | string, string ]
-  mode: MODE,
+  mode: MODE
   errors: string[]
+  isConfirmed: boolean
 }
 
 class DebugArea extends React.Component<Props, State> {
@@ -32,7 +33,8 @@ class DebugArea extends React.Component<Props, State> {
       [REEL.SECOND]: ['', ''],
       [REEL.THIRD]: ['', ''],
       mode: MODE.RANDOM,
-      errors: []
+      errors: [],
+      isConfirmed: false
     }
 
     this.toggleModeChoice = this.toggleModeChoice.bind(this)
@@ -49,16 +51,20 @@ class DebugArea extends React.Component<Props, State> {
         [REEL.FIRST]: ['', ''],
         [REEL.SECOND]: ['', ''],
         [REEL.THIRD]: ['', ''],
-      })  
+        isConfirmed: false,
+        errors: []
+      })
     }
     this.props.onModeChoice(mode)
   }
 
 
   handleSymbolChoice(event: React.ChangeEvent<HTMLSelectElement>, reel: REEL) {
+    const value = event.target.value ? event.target.value : ''
     this.setState({
       ...this.state,
-      [reel]: [Number(event.target.value), this.state[reel][1]]
+      isConfirmed: false,
+      [reel]: [value, this.state[reel][1]]
     })
 
     if (_.includes(this.state.errors, reel)) {
@@ -67,9 +73,11 @@ class DebugArea extends React.Component<Props, State> {
   }
 
   handlePositionChoice(event: React.ChangeEvent<HTMLSelectElement>, reel: REEL) {
+    const value = event.target.value ? event.target.value : ''
     this.setState({
       ...this.state,
-      [reel]: [this.state[reel][0], event.target.value]
+      isConfirmed: false,
+      [reel]: [this.state[reel][0], value]
     })
 
     if (_.includes(this.state.errors, reel)) {
@@ -80,13 +88,14 @@ class DebugArea extends React.Component<Props, State> {
   handleConfirm() {
     let errors: string[] = []
     _.forEach(this.state, (value, key) => {
-      if (_.includes(ReelsOrder, key)) {
+      if (_.isArray(value) && _.includes(ReelsOrder, key)) {
         ((!value[0] && value[1]) || (value[0] && !value[1])) && errors.push(key)
       }
     })
     this.setState({ errors })
 
     if (errors.length === 0) {
+      this.setState({ isConfirmed: true })
       this.props.onCombinationChoice(
         _.pick(this.state, ReelsOrder)
       )
@@ -104,7 +113,7 @@ class DebugArea extends React.Component<Props, State> {
     })
 
     result.unshift(
-      <option value="" key="defaultSymbol">Choose a symbol</option>
+      <option value="" key="defaultSymbol">- - -</option>
     )
     return result
   }
@@ -117,7 +126,7 @@ class DebugArea extends React.Component<Props, State> {
     })
 
     result.unshift(
-      <option value="" key="defaultPosition">Choose a position</option>
+      <option value="" key="defaultPosition">- - -</option>
     )
     return result
   }
@@ -131,6 +140,7 @@ class DebugArea extends React.Component<Props, State> {
             <select 
               name={`symbols-${reel}`} 
               id={`symbols-${reel}`} 
+              value={this.state[reel][0]}
               onChange={(event) => this.handleSymbolChoice(event, reel)}
               disabled={!Helpers.isFixedMode(this.state.mode)}
             >
@@ -141,6 +151,7 @@ class DebugArea extends React.Component<Props, State> {
             <select 
               name={`position-${reel}`}
               id={`position-${reel}`}
+              value={this.state[reel][1]}
               onChange={(event) => this.handlePositionChoice(event, reel)}
               disabled={!Helpers.isFixedMode(this.state.mode)}
             >
@@ -155,9 +166,8 @@ class DebugArea extends React.Component<Props, State> {
   render() {
     return (
       <div className="debug-area-container">
-        <div className="mode-choice-container">
-          <p>Choose mode: {this.state.mode}</p>
-          <label className="switch">
+        <div className="mode-choice-container d-flex flex-row my-3">
+          <label className="switch mb-0">
             <input 
               type="checkbox" 
               value={this.state.mode}
@@ -165,23 +175,28 @@ class DebugArea extends React.Component<Props, State> {
             />
             <span className="slider round"></span>
           </label>
+          <p className="mb-0 ml-2">Mode: {this.state.mode}</p>
         </div>
-        <div className="debug-are-table-container">
-          <table className="debug-area-table">
-            <thead>
-              <tr>
-                <th>Reel</th>
-                <th>Symbol</th>
-                <th>Position</th>
-              </tr>
-            </thead>
-            <tbody>
-              {this.generateRows()}
-            </tbody>
-          </table>
-          {this.state.errors.length > 0 && <p>Both or neither values should be provided</p>}
+        <div className="debug-area-table-container">
+          <div className="debug-area-table-with-errors">
+            <table className="debug-area-table w-100 mb-1">
+              <thead>
+                <tr>
+                  <th>Reel</th>
+                  <th>Symbol</th>
+                  <th>Position</th>
+                </tr>
+              </thead>
+              <tbody>
+                {this.generateRows()}
+              </tbody>
+            </table>
+            {this.state.errors.length > 0 ? <p className="error-message mb-1">Both or neither values should be provided</p> : <div className="placeholder" />}
+          </div>
+          {this.state.isConfirmed && <p className="mb-0 text-success d-inline-block confirmation-message">Changes applied &#10003;</p>}
           <button
             type="submit"
+            className="btn btn-light float-right"
             disabled={!Helpers.isFixedMode(this.state.mode)}
             onClick={() => this.handleConfirm()}
           >

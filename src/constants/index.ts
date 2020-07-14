@@ -154,3 +154,10 @@ export const PayTableData: CombinationData[] = [
     id: COMBINATION_KEYS.BAR_ANY
   }
 ]
+
+export const WinningClass = {
+  [LINES.TOP]: 'winner-top',
+  [LINES.MIDDLE]: 'winner-middle',
+  [LINES.BOTTOM]: 'winner-bottom',
+  [LINES.ANY]: 'any-line'
+}
