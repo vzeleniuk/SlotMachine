@@ -19,11 +19,11 @@ interface Props {
 
 const CombinationCell: React.StatelessComponent<CombinationCellProps> = (props: CombinationCellProps):JSX.Element => {
   const images = PayTableData[props.combinationIndex].combination.map((image, index) => {
-    return  <img src={SymbolsImages[image]} height="40" key={SymbolsImages[image] + props.combinationIndex + index}/>
+    return  <img src={SymbolsImages[image]} height="30" alt={image.toString()} key={SymbolsImages[image] + props.combinationIndex + index}/>
   })
   return (
     <td>
-      {images}
+      {props.combinationIndex !== 8 ? images : 'Any 3 BARs'}
     </td>
   )
 }
@@ -45,7 +45,6 @@ export const PayTable: React.StatelessComponent<Props> = (props: Props): JSX.Ele
   const winningKeys = uniq(props.winningCombination)
   return (
     <div className="pay-table-container">
-      <h1>Pay Table</h1>
       <table>
         <thead>
           <tr>

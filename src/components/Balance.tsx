@@ -8,8 +8,8 @@ interface Props {
 
 export const Balance = (props: Props) => {
   return (
-    <div className='balance-container'>
-      <div>
+    <div className='balance-container d-flex flex-row mb-4'>
+      <div className="mr-3 input-balance">
         <label htmlFor="balance">Total Balance</label>
         <input 
           type="number" 
@@ -25,7 +25,7 @@ export const Balance = (props: Props) => {
           onChange={event => props.onChange(event)}
         />
       </div>
-      <div>
+      <div className="input-bet">
         <label htmlFor="bet">Bet</label>
         <input 
           type="number" 

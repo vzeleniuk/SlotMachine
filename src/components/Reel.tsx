@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { iconHeight, totalSymbols, LINES } from '../constants'
-import { CustomReels } from '../types'
 import * as Helpers from '../helpers/Helpers'
 
 interface Props {
