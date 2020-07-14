@@ -6,12 +6,14 @@ const autoprefixer = require('autoprefixer');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
 
+const cssFilename = '/build/[name].[contenthash:8].css';
+
 module.exports = {
   target: "web",
   mode: "production",
   entry: ['./src/index.tsx'],
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, 'build'),
     publicPath: '/',
     filename: '[name].bundle.js'
   },
@@ -61,7 +63,7 @@ module.exports = {
               {
                 loader: 'file-loader',
                 options: {
-                  name: '/public/[name].[hash:8].[ext]',
+                  name: '/build/[name].[hash:8].[ext]',
                 },
               }
             ],
@@ -124,13 +126,10 @@ module.exports = {
       title: 'Production',
       template: path.resolve(__dirname, "public", "index.html"),
       filename: "./index.html",
-      favicon: './public/favicon.ico'
+      favicon: './dist/favicon.ico'
     }),
     new MiniCssExtractPlugin({
       filename: "./src/index.css",
-    }),
-    new Dotenv({
-      path: path.resolve(__dirname, './.env.development')
     })
   ]
 };
