@@ -32,6 +32,8 @@
     "url-loader": "^4.1.0"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -b master -d build",
     "start": "npm-run-all -s build-sass-to-css -p watch-sass-to-css start-dev-server",
     "build": "webpack --config webpack.config.prod.js",
     "start-dev-server": "webpack-dev-server --config ./webpack.config.dev.js build-bin",
