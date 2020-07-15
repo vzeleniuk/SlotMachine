@@ -1,22 +1,22 @@
 {
   "files": {
-    "main.css": "/SlotMachine/static/css/main.c44f390c.chunk.css",
-    "main.js": "/SlotMachine/static/js/main.25c3ca1f.chunk.js",
-    "main.js.map": "/SlotMachine/static/js/main.25c3ca1f.chunk.js.map",
-    "runtime-main.js": "/SlotMachine/static/js/runtime-main.28a25a88.js",
-    "runtime-main.js.map": "/SlotMachine/static/js/runtime-main.28a25a88.js.map",
-    "static/js/2.19d5a4f9.chunk.js": "/SlotMachine/static/js/2.19d5a4f9.chunk.js",
-    "static/js/2.19d5a4f9.chunk.js.map": "/SlotMachine/static/js/2.19d5a4f9.chunk.js.map",
-    "index.html": "/SlotMachine/index.html",
-    "precache-manifest.761288b4632e88e8f0856b969892156c.js": "/SlotMachine/precache-manifest.761288b4632e88e8f0856b969892156c.js",
-    "service-worker.js": "/SlotMachine/service-worker.js",
-    "static/css/main.c44f390c.chunk.css.map": "/SlotMachine/static/css/main.c44f390c.chunk.css.map",
-    "static/js/2.19d5a4f9.chunk.js.LICENSE.txt": "/SlotMachine/static/js/2.19d5a4f9.chunk.js.LICENSE.txt"
+    "main.css": "/static/css/main.c44f390c.chunk.css",
+    "main.js": "/static/js/main.73b23b85.chunk.js",
+    "main.js.map": "/static/js/main.73b23b85.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.9b4f0c59.js",
+    "runtime-main.js.map": "/static/js/runtime-main.9b4f0c59.js.map",
+    "static/js/2.19d5a4f9.chunk.js": "/static/js/2.19d5a4f9.chunk.js",
+    "static/js/2.19d5a4f9.chunk.js.map": "/static/js/2.19d5a4f9.chunk.js.map",
+    "index.html": "/index.html",
+    "precache-manifest.957be8987013053aa67bed963bd837c1.js": "/precache-manifest.957be8987013053aa67bed963bd837c1.js",
+    "service-worker.js": "/service-worker.js",
+    "static/css/main.c44f390c.chunk.css.map": "/static/css/main.c44f390c.chunk.css.map",
+    "static/js/2.19d5a4f9.chunk.js.LICENSE.txt": "/static/js/2.19d5a4f9.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.28a25a88.js",
+    "static/js/runtime-main.9b4f0c59.js",
     "static/js/2.19d5a4f9.chunk.js",
     "static/css/main.c44f390c.chunk.css",
-    "static/js/main.25c3ca1f.chunk.js"
+    "static/js/main.73b23b85.chunk.js"
   ]
 }
